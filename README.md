@@ -113,16 +113,3 @@ Estudaí é uma aplicação web que utiliza a API Gemini do Google para transfor
 *   **Estilos:** Primariamente definidos com Tailwind CSS diretamente nos componentes React e no `index.html`.
 *   **Temas do Syntax Highlighter:** O estilo `okaidia` é usado em `components/TopicCard.tsx`. Pode ser alterado para outros temas disponíveis em `react-syntax-highlighter`.
 *   **Voz do TTS:** Atualmente configurada para 'Kore' em `services/geminiAudioService.ts`. Pode ser alterada para outras vozes suportadas pelo modelo TTS.
-
-## 🔮 Possíveis Melhorias Futuras
-
-*   Opções de exportação do material gerado (ex: PDF, Markdown).
-*   Permitir edição do material gerado pelo usuário.
-*   Internacionalização (i18n) da interface.
-*   Implementar feedback de progresso mais granular (se as APIs da Gemini oferecerem).
-*   Histórico de materiais gerados anteriormente.
-*   Mais opções de personalização para o processo de geração (ex: nível de detalhe, tom).
-
----
-*&copy; {new Date().getFullYear()} Estudaí. Todos os direitos reservados.*
-```

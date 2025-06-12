@@ -26,10 +26,10 @@ export const convertTextToSpeech = async (text: string): Promise<TextToSpeechRes
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            // As per user's example, using 'Kore'. 
+          
             // For PT-BR, specific voice names like 'pt-BR-Standard-A' or 'pt-BR-Wavenet-B' might be available,
             // consult Gemini documentation for the `gemini-2.5-flash-preview-tts` model.
-            prebuiltVoiceConfig: { voiceName: 'Kore' }, 
+            prebuiltVoiceConfig: { voiceName: 'Charon' }, 
           },
         },
       },

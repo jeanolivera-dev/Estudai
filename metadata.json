@@ -1,0 +1,7 @@
+
+{
+  "name": "Estudaí - Gerador de Material Didático com IA",
+  "description": "Uma aplicação web para gerar material didático a partir de arquivos PDF usando a API Gemini. O usuário faz o upload de um PDF e a IA o estrutura em tópicos de estudo.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

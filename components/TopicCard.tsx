@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -24,6 +25,10 @@ interface TopicCardProps {
   index: number;
 }
 
+const removeDoubleAsterisks = (text: string): string => {
+  return text.replace(/\*\*/g, '');
+};
+
 const SectionRenderer: React.FC<{ secao: Section; topicId: string; sectionIndex: number }> = ({ secao, topicId, sectionIndex }) => {
   const sectionKey = `${topicId}-secao-${sectionIndex}-${secao.tipo}`;
   const proseClasses = "prose prose-slate prose-invert max-w-none text-slate-300 prose-headings:text-sky-300 prose-a:text-cyan-400 hover:prose-a:text-cyan-300 prose-strong:text-slate-100 prose-code:text-slate-300 prose-code:bg-slate-700 prose-code:p-1 prose-code:rounded prose-pre:bg-slate-900/70 prose-pre:text-slate-200 prose-ul:list-disc prose-ol:list-decimal prose-li:my-1";
@@ -34,7 +39,7 @@ const SectionRenderer: React.FC<{ secao: Section; topicId: string; sectionIndex:
         <div key={sectionKey} className="py-2">
           {secao.titulo && <h4 className="text-lg font-semibold text-sky-300 mb-2">{secao.titulo}</h4>}
           <div className={proseClasses}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{secao.conteudo}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{removeDoubleAsterisks(secao.conteudo)}</ReactMarkdown>
           </div>
         </div>
       );
@@ -43,7 +48,7 @@ const SectionRenderer: React.FC<{ secao: Section; topicId: string; sectionIndex:
         <div key={sectionKey} className="my-3 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
           {secao.titulo && <h4 className="text-md font-semibold text-cyan-400 mb-2 flex items-center"><IconFileText className="w-5 h-5 mr-2 flex-shrink-0" /> {secao.titulo}</h4>}
           <div className={`${proseClasses} text-sm`}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{secao.conteudo}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{removeDoubleAsterisks(secao.conteudo)}</ReactMarkdown>
           </div>
         </div>
       );
@@ -52,7 +57,7 @@ const SectionRenderer: React.FC<{ secao: Section; topicId: string; sectionIndex:
         <div key={sectionKey} className="my-4 p-4 bg-sky-800/60 rounded-lg border-l-4 border-sky-500 shadow-md">
           <div className="flex items-start">
             <IconQuote className="w-5 h-5 mr-3 text-sky-400 flex-shrink-0 mt-1" />
-            <p className="text-slate-100 italic">{secao.conteudo}</p>
+            <p className="text-slate-100 italic">{removeDoubleAsterisks(secao.conteudo)}</p>
           </div>
         </div>
       );
@@ -61,7 +66,7 @@ const SectionRenderer: React.FC<{ secao: Section; topicId: string; sectionIndex:
         <div key={sectionKey} className="py-2">
           {secao.titulo && <h4 className="text-md font-semibold text-sky-300 mb-2 flex items-center"><IconListChecks className="w-5 h-5 mr-2 flex-shrink-0" />{secao.titulo}</h4>}
           <ul className="list-disc list-inside pl-4 text-slate-300 space-y-1 marker:text-sky-400">
-            {secao.itens.map((item, i) => <li key={i} className="text-slate-300">{item}</li>)}
+            {secao.itens.map((item, i) => <li key={i} className="text-slate-300">{removeDoubleAsterisks(item)}</li>)}
           </ul>
         </div>
       );
@@ -70,11 +75,12 @@ const SectionRenderer: React.FC<{ secao: Section; topicId: string; sectionIndex:
         <div key={sectionKey} className="my-3 p-4 bg-teal-800/40 rounded-lg border border-teal-700">
           <div className="flex items-start">
             <IconHelpCircle className="w-6 h-6 mr-3 text-teal-400 flex-shrink-0 mt-0.5" />
-            <p className="text-teal-200 italic">{secao.conteudo}</p>
+            <p className="text-teal-200 italic">{removeDoubleAsterisks(secao.conteudo)}</p>
           </div>
         </div>
       );
     case 'codigo':
+      // Do not remove double asterisks from code content, as ** can be a valid operator (e.g., Python power)
       const markdownCode = `\`\`\`${secao.linguagem || ''}\n${secao.conteudo}\n\`\`\``;
       return (
         <div key={sectionKey} className="py-2">
@@ -107,15 +113,15 @@ const SectionRenderer: React.FC<{ secao: Section; topicId: string; sectionIndex:
       );
     default:
       const unknownSecao = secao as any;
-      if (unknownSecao.conteudo) {
+      if (unknownSecao.conteudo && typeof unknownSecao.conteudo === 'string') {
           return (
               <div key={sectionKey} className={`${proseClasses} py-2`}>
                   {unknownSecao.titulo && <h4 className="text-md font-semibold text-yellow-400 mt-0 mb-1">Conteúdo (tipo desconhecido: {unknownSecao.tipo}): {unknownSecao.titulo}</h4>}
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{unknownSecao.conteudo}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{removeDoubleAsterisks(unknownSecao.conteudo)}</ReactMarkdown>
               </div>
           );
       }
-      return <p key={sectionKey} className="text-red-400">Tipo de seção desconhecido ou conteúdo ausente: {(secao as any).tipo}</p>;
+      return <p key={sectionKey} className="text-red-400">Tipo de seção desconhecido ou conteúdo ausente/inválido: {(secao as any).tipo}</p>;
   }
 };
 
@@ -166,7 +172,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
             {topic.objetivos.map((obj, i) => (
               <li key={`${topic.id}-obj-${i}`} className="flex items-start">
                 <IconCheckCircle2 className="w-4 h-4 mr-3 mt-1 text-green-500 flex-shrink-0" />
-                <span className="text-slate-300">{obj}</span>
+                <span className="text-slate-300">{removeDoubleAsterisks(obj)}</span> {/* Also applied to objetivos for consistency */}
               </li>
             ))}
           </ul>
